@@ -1,0 +1,2 @@
+,Days for shipment (scheduled),Shipping Mode_Standard Class,Shipping Mode_Second Class,order_weekday,order_month,Order Item Quantity,Sales,Order Item Profit Ratio,Latitude,Longitude,Order Status_CANCELED,Order Status_CLOSED,Order Status_COMPLETE,Order Status_ON_HOLD,Order Status_PAYMENT_REVIEW,Order Status_PENDING,Order Status_PENDING_PAYMENT,Order Status_PROCESSING,Order Status_SUSPECTED_FRAUD
+0,5,1,0,2,7,3,200,0.2,40.0,-3.0,0,0,0,0,0,0,0,1,0
