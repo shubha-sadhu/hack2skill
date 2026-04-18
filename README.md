@@ -125,6 +125,10 @@ final_score = (
 
 ---
 
+## Quick Links
+
+- [Local Setup](local_setup_supply_chain_api.md)
+
 ## ⚙️ Key Components
 
 ### 🔹 `Data` Class
