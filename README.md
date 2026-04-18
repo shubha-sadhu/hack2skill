@@ -4,6 +4,8 @@
 
 This project is a hybrid **Machine Learning + AI-driven risk assessment system** designed to predict shipment delays and assess external risks affecting supply chains.
 
+Requires Python >=3.12
+
 It combines:
 
 * **ML models** for internal delay prediction
