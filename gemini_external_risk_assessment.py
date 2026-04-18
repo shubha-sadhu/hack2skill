@@ -52,7 +52,7 @@ class AI_Model(object):
         
 
 if __name__=='__main__':
-    gemini_2=AI_Model('gemini-2.5-flash', 'GEMINI_API_KEY')
+    gemini_2=AI_Model('gemini-2.5-flash-lite', 'GEMINI_API_KEY')
     json_reponse=gemini_2.get_json_response("""
         Search and analyze news that may cause supply chain disruptions on road/air/sea.
         Instructions:

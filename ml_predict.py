@@ -125,6 +125,33 @@ class Data(object):
         df=pd.DataFrame([input_dict])
         return cls(dataframe=df)
     
+    @classmethod
+    def from_objects(cls, items):
+        payloads = [
+            obj.model_dump() if hasattr(obj, "model_dump") else obj
+            for obj in items
+        ]
+
+        rows=[]
+        for data in payloads:
+            rows.append({
+                "Shipping Mode": data["Shipping_Mode"],
+                "Order Status": data["Order_Status"],
+                "Days for shipment (scheduled)": data["Days_for_shipment_scheduled"],
+                "order_weekday": data["order_weekday"],
+                "order_month": data["order_month"],
+                "Order Item Quantity": data["Order_Item_Quantity"],
+                "Sales": data["Sales"],
+                "Order Item Profit Ratio": data["Order_Item_Profit_Ratio"],
+                "Latitude": data["Latitude"],
+                "Longitude": data["Longitude"],
+                "Customer Country": data["Customer_Country"],
+                "Order Country": data["Order_Country"]
+            })
+
+        df = pd.DataFrame(rows)
+        return cls(dataframe=df)
+    
 
 if __name__=='__main__':
     test_input = {
