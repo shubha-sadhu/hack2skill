@@ -1,7 +1,8 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, UploadFile, HTTPException, File, Body
 from pydantic import BaseModel
 from ml_predict import Model, Data
 from final_predict import process_ai_risks, deliver_final_verdict
+from typing import Optional
 
 app = FastAPI()
 
@@ -80,16 +81,21 @@ def predict(data: ShipmentInput):
 
     return result[0]
 
-@app.post("/predict-batch")
-def predict_batch(data: list[ShipmentInput]):
+@app.post("/predict-batch-file")
+async def predict_batch_file(
+    file: Optional[UploadFile] = File(default=None)
+):
+    try:
+        shipment_data = Data.from_upload(file)
 
-    shipment_data = Data.from_objects(data)
+        disruptions = process_ai_risks(shipment_data)
 
-    disruptions = process_ai_risks(shipment_data)
-
-    return deliver_final_verdict(
-        shipment_data,
-        disruptions,
-        clf_model,
-        reg_model
-    )
+        return deliver_final_verdict(
+            shipment_data,
+            disruptions,
+            clf_model,
+            reg_model
+        )
+    
+    except Exception as e:
+        raise HTTPException(status_code=422, detail=str(e))
