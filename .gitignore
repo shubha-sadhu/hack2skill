@@ -14,5 +14,13 @@ node_modules/
 dist/
 build/
 
+#Ignore __pycache__ folder
+**/__pycache__/
+
 #Ignore the big. csv file
 Europe_chain_data_modified.csv
+
+test_api.py
+model_train.py
+my_output.csv
+data_clean.py
