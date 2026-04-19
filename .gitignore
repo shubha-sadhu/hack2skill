@@ -16,3 +16,8 @@ build/
 
 #Ignore the big. csv file
 Europe_chain_data_modified.csv
+
+test_api.py
+model_train.py
+my_output.csv
+data_clean.py
