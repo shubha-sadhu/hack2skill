@@ -5,6 +5,16 @@ from final_predict import process_ai_risks, deliver_final_verdict
 
 app = FastAPI()
 
+from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 # Load models once at startup
 clf_model = Model("model_delay_flag.pkl", "classifier_features.pkl")
 reg_model = Model("model_delay_time.pkl", "regressor_features.pkl")
