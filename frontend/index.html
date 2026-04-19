@@ -1371,10 +1371,13 @@
 
 		// ── BATCH ────────────────────────────────────────────────────
 		let csvRows = [];
+		let selectedFile = null;
 
 		function loadCSV(ev) {
 			const file = ev.target.files[0];
 			if (!file) return;
+			selectedFile = file;   // store file globally
+
 			$('b-fname').textContent = file.name;
 			$('b-btn').disabled = false;
 			const rd = new FileReader();
@@ -1400,10 +1403,12 @@
 
 			let data;
 			try {
-				const r = await fetch(`${BASE}/predict-batch`, {
+				const fd = new FormData();
+				fd.append("file", selectedFile);
+
+				const r = await fetch(`${BASE}/predict-batch-file`, {
 					method: 'POST',
-					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({ records: csvRows })
+					body: fd
 				});
 				if (!r.ok) throw new Error(`${r.status}`);
 				data = await r.json();
