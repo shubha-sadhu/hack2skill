@@ -94,6 +94,10 @@ def process_ai_risks(data: Data):
     disruption_dict=defaultdict(list)
     for route in routes:
         route_list=sorted(list(route))
+
+        if len(route_list) < 2:
+            continue #skip invaid/same routes
+        
         the_response=gemini_2.get_json_response(f"""
         Search and analyze news that may cause supply chain disruptions on road/air/sea for 
         shipments between {route_list[0]} and {route_list[1]}.
