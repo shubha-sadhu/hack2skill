@@ -1,3 +1,22 @@
+# protecting existing api
+from fastapi import Depends
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from jose import jwt, JWTError
+
+security = HTTPBearer()
+SECRET = "chainguard-secret-key"
+
+# validating user
+def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
+    token = credentials.credentials
+    try:
+        payload = jwt.decode(token, SECRET, algorithms=["HS256"])
+        return payload["sub"]
+    except JWTError:
+        raise HTTPException(status_code=401, detail="Invalid token")
+
+
+
 from fastapi import APIRouter, UploadFile, File, HTTPException
 from app.schema.shipment import ShipmentInput
 from app.core.data import Data
@@ -32,7 +51,7 @@ def home():
 
 
 @router.post("/predict")
-def predict(data: ShipmentInput):
+def predict(data: dict, user=Depends(get_current_user)):
 
     input_dict = {
         "Shipping Mode": data.Shipping_Mode,
@@ -80,3 +99,5 @@ async def predict_batch_file(
     
     except Exception as e:
         raise HTTPException(status_code=422, detail=str(e))
+
+

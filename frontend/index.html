@@ -12,6 +12,7 @@
 <body>
 	<div class="app">
 		<header class="topbar">
+			<button class="btn-ghost" onclick="logout()">Logout</button>
 			<div class="logo">
 				<div class="logo-mark">
 					<svg viewBox="0 0 16 16">
@@ -27,8 +28,74 @@
 			<div class="pip"><span class="pip-dot"></span>API live · localhost:8000</div>
 		</header>
 
+		<!-- ══ LOGIN ══ -->
+<div class="page active" id="page-login">
+  <div class="predict-wrap">
+    <div class="page-hero">
+      <div class="page-hero-icon" style="background:var(--accent)">🔐</div>
+      <div>
+        <h2>Login</h2>
+        <p>Access ChainGuard dashboard</p>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-grid">
+        <div class="field">
+          <label>Email</label>
+          <input type="text" id="email" placeholder="Enter email">
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <input type="password" id="password" placeholder="Enter password">
+        </div>
+      </div>
+
+      <div class="form-footer">
+        <button class="btn-primary" onclick="login()">Login</button>
+		<button class="btn-outline" onclick="goPage('signup')">
+  Create Account
+</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SIGNUP ══ -->
+<div class="page" id="page-signup">
+  <div class="predict-wrap">
+    
+    <div class="page-hero">
+      <div class="page-hero-icon" style="background:var(--green)">🧾</div>
+      <div>
+        <h2>Signup</h2>
+        <p>Create your ChainGuard account</p>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-grid">
+        <div class="field">
+          <label>Email</label>
+          <input type="text" id="signup-email" placeholder="Enter email">
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <input type="password" id="signup-password" placeholder="Enter password">
+        </div>
+      </div>
+
+      <div class="form-footer">
+        <button class="btn-primary" onclick="signup()">Signup</button>
+        <button class="btn-ghost" onclick="goPage('login')">Back to Login</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
 		<!-- ══ DASHBOARD ══ -->
-		<div class="page active" id="page-dash">
+		<div class="page" id="page-dash">
 			<div class="hero">
 				<div class="hero-inner">
 					<div class="hero-text">

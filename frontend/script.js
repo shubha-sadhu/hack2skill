@@ -1,3 +1,18 @@
+function getAuthHeaders() {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    alert("Please login first");
+    goPage("login");
+    return {};
+  }
+
+  return {
+    "Content-Type": "application/json",
+    "Authorization": `Bearer ${token}`
+  };
+}
+
 // ── CONFIG ──────────────────────────────────────────────────
 const BASE = 'http://127.0.0.1:8000';
 
@@ -148,7 +163,7 @@ async function runPredict() {
 	try {
 		const r = await fetch(`${BASE}/predict`, {
 			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
+			headers: getAuthHeaders(),
 			body: JSON.stringify(buildPayload())
 		});
 		if (!r.ok) throw new Error(`${r.status} ${r.statusText}`);
@@ -228,8 +243,13 @@ async function runBatch() {
 		const fd = new FormData();
 		fd.append("file", selectedFile);
 
+		const token = localStorage.getItem("token");
+
 		const r = await fetch(`${BASE}/predict-batch-file`, {
 			method: 'POST',
+			headers: {
+				"Authorization": `Bearer ${localStorage.getItem("token")}`
+			}, 
 			body: fd
 		});
 		if (!r.ok) throw new Error(`${r.status}`);
@@ -307,3 +327,82 @@ new Chart($('c-vol'), {
 	},
 	options: { ...cOpts, responsive: true, maintainAspectRatio: false }
 });
+
+// Login routine
+async function login() {
+  const res = await fetch(`${BASE}/login`, {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      email: document.getElementById("email").value,
+      password: document.getElementById("password").value
+    })
+  });
+
+  if (!res.ok) {
+    alert("Login failed ❌");
+    return;
+  }
+
+  const data = await res.json();
+  localStorage.setItem("token", data.access_token);
+
+  alert("Login successful ✅");
+
+  // redirect to dashboard
+  goPage('dash');
+}
+
+// Logout routine
+function logout() {
+  localStorage.removeItem("token");
+  alert("Logged out");
+  location.reload();
+}
+
+// Authentication check
+window.onload = () => {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    goPage("login");
+  } else {
+    goPage("dash");
+  }
+};
+
+//Signup routine
+async function signup() {
+  const email = document.getElementById("signup-email").value;
+  const password = document.getElementById("signup-password").value;
+
+  if (!email || !password) {
+    alert("Fill all fields");
+    return;
+  }
+
+  const res = await fetch(`${BASE}/signup`, {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({ email, password })
+  });
+
+  if (!res.ok) {
+    alert("Signup failed ❌ (user may already exist)");
+    return;
+  }
+
+  // 🔥 AUTO LOGIN
+  const loginRes = await fetch(`${BASE}/login`, {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({ email, password })
+  });
+
+  const data = await loginRes.json();
+  localStorage.setItem("token", data.access_token);
+
+  alert("Signup + Login successful ✅");
+
+  goPage("dash");
+}
