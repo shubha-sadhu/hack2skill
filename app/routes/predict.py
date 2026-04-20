@@ -51,7 +51,7 @@ def home():
 
 
 @router.post("/predict")
-def predict(data: dict, user=Depends(get_current_user)):
+def predict(data: ShipmentInput, user=Depends(get_current_user)):
 
     input_dict = {
         "Shipping Mode": data.Shipping_Mode,

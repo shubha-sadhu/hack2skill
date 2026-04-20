@@ -14,7 +14,11 @@ def generate_recommendations(
     route_risk=False
 ):
     actions = []
-
+    predicted_delay = float(predicted_delay)
+    inventory_days_left = int(inventory_days_left)
+    supplier_score = float(supplier_score)
+    print(type(predicted_delay), predicted_delay)
+    print(type(supplier_score), supplier_score)
     # -------------------------
     # DELAY BASED RULES
     # -------------------------
@@ -45,26 +49,28 @@ def generate_recommendations(
     # -------------------------
     # INVENTORY RULES
     # -------------------------
-    if predicted_delay > inventory_days_left:
-        actions.append("Increase safety stock immediately to avoid stockout.")
+    if inventory_days_left:
+        if predicted_delay > inventory_days_left:
+            actions.append("Increase safety stock immediately to avoid stockout.")
 
-    if inventory_days_left <= 3:
-        actions.append("Trigger emergency replenishment review.")
+        if inventory_days_left <= 3:
+            actions.append("Trigger emergency replenishment review.")
 
-    if inventory_days_left > 15:
-        actions.append("Inventory buffer sufficient; avoid expensive expedite actions.")
+        if inventory_days_left > 15:
+            actions.append("Inventory buffer sufficient; avoid expensive expedite actions.")
 
     # -------------------------
     # SUPPLIER RULES
     # -------------------------
-    if supplier_score < 0.50:
-        actions.append("Supplier reliability low: shift future orders to alternate vendor.")
+    if supplier_score:
+        if supplier_score < 0.50:
+            actions.append("Supplier reliability low: shift future orders to alternate vendor.")
 
-    if supplier_score < 0.30:
-        actions.append("Freeze non-critical purchase orders from this supplier.")
+        if supplier_score < 0.30:
+            actions.append("Freeze non-critical purchase orders from this supplier.")
 
-    if supplier_score > 0.85:
-        actions.append("Preferred supplier available: consider volume reallocation.")
+        if supplier_score > 0.85:
+            actions.append("Preferred supplier available: consider volume reallocation.")
 
     # -------------------------
     # TRANSPORT RULES
@@ -120,17 +126,18 @@ def generate_recommendations(
     if risk_level == "high" and shipment_priority == "Same Day":
         actions.append("Activate critical shipment war-room response.")
 
-    if predicted_delay > 5 and supplier_score < 50:
-        actions.append("Switch immediate replenishment to backup supplier.")
+    if supplier_score:
+        if predicted_delay > 5 and supplier_score < 50:
+            actions.append("Switch immediate replenishment to backup supplier.")\
+        
+        if strike_risk and supplier_score < 50:
+            actions.append("Dual-source future procurement immediately.")
 
-    if predicted_delay > inventory_days_left and demand_spike:
+    if inventory_days_left and predicted_delay > inventory_days_left and demand_spike:
         actions.append("High stockout risk: prioritize top-selling SKUs first.")
 
     if port_congestion and transport_mode == "sea":
         actions.append("Split shipment across multiple ports.")
-
-    if strike_risk and supplier_score < 50:
-        actions.append("Dual-source future procurement immediately.")
 
     # Remove duplicates
     actions = list(dict.fromkeys(actions))

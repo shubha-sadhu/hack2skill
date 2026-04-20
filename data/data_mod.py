@@ -10,5 +10,5 @@ df["Transport_mode"]=np.random.choice(my_list, len(df))
 df["Supplier"]=np.random.choice(supplier, len(df))
 df["Inventory_days"]=df["Category Id"]%20
 df["Supplier_score"]=np.random.choice(supplier_score, len(df))
-
+print(df.dtypes)
 df.to_csv("Europe_supply_chain.csv", index=False)
