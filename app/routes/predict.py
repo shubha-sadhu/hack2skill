@@ -1,42 +1,42 @@
-from fastapi import FastAPI, UploadFile, HTTPException, File, Body
-from pydantic import BaseModel
-from ml_predict import Model, Data
-from final_predict import process_ai_risks, deliver_final_verdict
-from typing import Optional
+# protecting existing api
+from fastapi import Depends
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from jose import jwt, JWTError
 
-app = FastAPI()
+security = HTTPBearer()
+SECRET = "chainguard-secret-key"
 
-from fastapi.middleware.cors import CORSMiddleware
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-# Load models once at startup
-clf_model = Model("model_delay_flag.pkl", "classifier_features.pkl")
-reg_model = Model("model_delay_time.pkl", "regressor_features.pkl")
+# validating user
+def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
+    token = credentials.credentials
+    try:
+        payload = jwt.decode(token, SECRET, algorithms=["HS256"])
+        return payload["sub"]
+    except JWTError:
+        raise HTTPException(status_code=401, detail="Invalid token")
 
 
-class ShipmentInput(BaseModel):
-    Shipping_Mode: str
-    Order_Status: str
-    Days_for_shipment_scheduled: int
-    order_weekday: int
-    order_month: int
-    Order_Item_Quantity: int
-    Sales: float
-    Order_Item_Profit_Ratio: float
-    Latitude: float
-    Longitude: float
-    Customer_Country: str
-    Order_Country: str
 
+from fastapi import APIRouter, UploadFile, File, HTTPException
+from app.schema.shipment import ShipmentInput
+from app.core.data import Data
+from app.core.ml_model import Model
+from app.services.final_predict import deliver_final_verdict, process_ai_risks
+from pathlib import Path
 
-@app.get("/health")
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+MODEL_DIR = BASE_DIR / "models"
+
+clf_model = Model(str(MODEL_DIR / "model_delay_flag.pkl"),
+        str(MODEL_DIR / "classifier_features.pkl")
+    )
+reg_model = Model(str(MODEL_DIR / "model_delay_time.pkl"),
+        str(MODEL_DIR / "regressor_features.pkl")
+    )
+
+router = APIRouter()
+
+@router.get("/health")
 def health():
     try:
         clf_model.model
@@ -45,13 +45,13 @@ def health():
     except Exception:
         return {"status": "error"}
 
-@app.get("/")
+@router.get("/")
 def home():
     return {"message": "Supply Chain AI API Running"}
 
 
-@app.post("/predict")
-def predict(data: ShipmentInput):
+@router.post("/predict")
+def predict(data: dict, user=Depends(get_current_user)):
 
     input_dict = {
         "Shipping Mode": data.Shipping_Mode,
@@ -81,9 +81,9 @@ def predict(data: ShipmentInput):
 
     return result[0]
 
-@app.post("/predict-batch-file")
+@router.post("/predict-batch-file")
 async def predict_batch_file(
-    file: Optional[UploadFile] = File(default=None)
+    file: UploadFile = File(default=None)
 ):
     try:
         shipment_data = Data.from_upload(file)
@@ -99,3 +99,5 @@ async def predict_batch_file(
     
     except Exception as e:
         raise HTTPException(status_code=422, detail=str(e))
+
+
