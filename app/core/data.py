@@ -153,8 +153,8 @@ class Data(object):
         if extension in ALLOWED:
             data=Data(databytes=file_bytes)
             df=data.get_dataframe()
-            print(df.dtypes)
-            print(df.head())        
+            # print(df.dtypes)
+            # print(df.head())        
             return cls(dataframe=df)
         else:
             raise TypeError('Not a valid filetype')
