@@ -14,7 +14,7 @@ function getAuthHeaders() {
 }
 
 // ── CONFIG ──────────────────────────────────────────────────
-const BASE = 'http://127.0.0.1:8000';
+const BASE = "https://supplychainguard-pklq.onrender.com";
 
 // ── UTILS ───────────────────────────────────────────────────
 const $ = id => document.getElementById(id);
@@ -148,7 +148,10 @@ function buildPayload() {
 		Latitude: +$('s-lat').value,
 		Longitude: +$('s-lon').value,
 		Customer_Country: $('s-cust').value.trim(),
-		Order_Country: $('s-order').value.trim()
+		Order_Country: $('s-order').value.trim(),
+
+		//To be updated later as taking input from user
+		//Inventory_days: +$('s-days').value
 	};
 }
 
@@ -248,7 +251,7 @@ async function runBatch() {
 		const r = await fetch(`${BASE}/predict-batch-file`, {
 			method: 'POST',
 			headers: {
-				"Authorization": `Bearer ${localStorage.getItem("token")}`
+				"Authorization": `Bearer ${token}`
 			}, 
 			body: fd
 		});

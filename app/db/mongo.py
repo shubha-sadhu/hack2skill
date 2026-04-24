@@ -1,5 +1,5 @@
 from pymongo import MongoClient
-
-client = MongoClient("mongodb://localhost:27017")
+import os
+client = MongoClient(os.getenv("MONGO_URL"))
 db = client["chainguard"]
 users = db["users"]
