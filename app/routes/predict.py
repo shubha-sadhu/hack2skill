@@ -65,7 +65,9 @@ def predict(data: ShipmentInput, user=Depends(get_current_user)):
         "Latitude": data.Latitude,
         "Longitude": data.Longitude,
         "Customer Country": data.Customer_Country,
-        "Order Country": data.Order_Country
+        "Order Country": data.Order_Country,
+        "Inventory_Days": getattr(data, "Inventory_Days", 7),
+        "Supplier_score": getattr(data, "Supplier_score", 0.5)
     }
 
     shipment_data = Data.from_dict(input_dict)
