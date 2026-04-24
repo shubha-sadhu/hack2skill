@@ -148,7 +148,10 @@ function buildPayload() {
 		Latitude: +$('s-lat').value,
 		Longitude: +$('s-lon').value,
 		Customer_Country: $('s-cust').value.trim(),
-		Order_Country: $('s-order').value.trim()
+		Order_Country: $('s-order').value.trim(),
+
+		//To be updated later as taking input from user
+		Inventory_days: +$('s-days').value
 	};
 }
 
