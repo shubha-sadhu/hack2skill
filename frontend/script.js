@@ -151,7 +151,7 @@ function buildPayload() {
 		Order_Country: $('s-order').value.trim(),
 
 		//To be updated later as taking input from user
-		Inventory_days: +$('s-days').value
+		#Inventory_days: +$('s-days').value
 	};
 }
 
