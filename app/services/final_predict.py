@@ -83,7 +83,7 @@ def deliver_final_verdict(data: Data, disruption_dict:dict, clf_model, reg_model
             risk_level=str((disruption_dict.get(route, [{}])[0].get("risk_type"))),
             shipment_priority=str(row_dict.get("Shipping Mode")),
             transport_mode=str(row_dict.get("Transport_mode")),
-            inventory_days_left=int(row_dict.get("Inventory_days")),
+            inventory_days_left=int(row_dict.get("Inventory_days") or 0),
             supplier_score=float(row_dict.get("Supplier_score")),
             port_congestion=("port_congestion" in disruption_dict.get(route, [{}])[0].get("risk_type")),
             weather_risk=("weather_risk" in disruption_dict.get(route, [{}])[0].get("risk_type")),
