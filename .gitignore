@@ -26,6 +26,5 @@ my_output.csv
 data_clean.py
 
 #abandoned files but still have workable code
-final_predict.py
 gemini_external_risk_assessment.py
 ml_predict.py
