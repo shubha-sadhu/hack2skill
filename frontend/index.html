@@ -29,70 +29,70 @@
 		</header>
 
 		<!-- ══ LOGIN ══ -->
-<div class="page active" id="page-login">
-  <div class="predict-wrap">
-    <div class="page-hero">
-      <div class="page-hero-icon" style="background:var(--accent)">🔐</div>
-      <div>
-        <h2>Login</h2>
-        <p>Access ChainGuard dashboard</p>
-      </div>
-    </div>
+		<div class="page active" id="page-login">
+			<div class="predict-wrap">
+				<div class="page-hero">
+					<div class="page-hero-icon" style="background:var(--accent)">🔐</div>
+					<div>
+						<h2>Login</h2>
+						<p>Access ChainGuard dashboard</p>
+					</div>
+				</div>
 
-    <div class="form-section">
-      <div class="form-grid">
-        <div class="field">
-          <label>Email</label>
-          <input type="text" id="email" placeholder="Enter email">
-        </div>
-        <div class="field">
-          <label>Password</label>
-          <input type="password" id="password" placeholder="Enter password">
-        </div>
-      </div>
+				<div class="form-section">
+					<div class="form-grid">
+						<div class="field">
+							<label>Email</label>
+							<input type="text" id="email" placeholder="Enter email">
+						</div>
+						<div class="field">
+							<label>Password</label>
+							<input type="password" id="password" placeholder="Enter password">
+						</div>
+					</div>
 
-      <div class="form-footer">
-        <button class="btn-primary" onclick="login()">Login</button>
-		<button class="btn-outline" onclick="goPage('signup')">
-  Create Account
-</button>
-      </div>
-    </div>
-  </div>
-</div>
+					<div class="form-footer">
+						<button class="btn-primary" onclick="login()">Login</button>
+						<button class="btn-outline" onclick="goPage('signup')">
+							Create Account
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
 
-<!-- ══ SIGNUP ══ -->
-<div class="page" id="page-signup">
-  <div class="predict-wrap">
-    
-    <div class="page-hero">
-      <div class="page-hero-icon" style="background:var(--green)">🧾</div>
-      <div>
-        <h2>Signup</h2>
-        <p>Create your ChainGuard account</p>
-      </div>
-    </div>
+		<!-- ══ SIGNUP ══ -->
+		<div class="page" id="page-signup">
+			<div class="predict-wrap">
 
-    <div class="form-section">
-      <div class="form-grid">
-        <div class="field">
-          <label>Email</label>
-          <input type="text" id="signup-email" placeholder="Enter email">
-        </div>
-        <div class="field">
-          <label>Password</label>
-          <input type="password" id="signup-password" placeholder="Enter password">
-        </div>
-      </div>
+				<div class="page-hero">
+					<div class="page-hero-icon" style="background:var(--green)">🧾</div>
+					<div>
+						<h2>Signup</h2>
+						<p>Create your ChainGuard account</p>
+					</div>
+				</div>
 
-      <div class="form-footer">
-        <button class="btn-primary" onclick="signup()">Signup</button>
-        <button class="btn-ghost" onclick="goPage('login')">Back to Login</button>
-      </div>
-    </div>
+				<div class="form-section">
+					<div class="form-grid">
+						<div class="field">
+							<label>Email</label>
+							<input type="text" id="signup-email" placeholder="Enter email">
+						</div>
+						<div class="field">
+							<label>Password</label>
+							<input type="password" id="signup-password" placeholder="Enter password">
+						</div>
+					</div>
 
-  </div>
-</div>
+					<div class="form-footer">
+						<button class="btn-primary" onclick="signup()">Signup</button>
+						<button class="btn-ghost" onclick="goPage('login')">Back to Login</button>
+					</div>
+				</div>
+
+			</div>
+		</div>
 
 		<!-- ══ DASHBOARD ══ -->
 		<div class="page" id="page-dash">
@@ -307,10 +307,48 @@
 					<div class="bar-track">
 						<div class="bar-fill" id="r-fill" style="width:0"></div>
 					</div>
-					<div class="disc-box" id="r-disc" style="display:none">
-						<div class="disc-label">external disruptions</div>
-						<div id="r-disc-text"></div>
-					</div>
+					<div id="r-route" style="margin-top:10px; display:none;">
+  <div style="
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-family:var(--mono);
+    font-size:11px;
+    color:var(--muted2);
+  ">
+    <span id="r-from">—</span>
+    <span style="opacity:.6">→</span>
+    <span id="r-to">—</span>
+  </div>
+</div>
+					<div id="r-tabs" style="margin-top:14px; display:none">
+
+  <!-- Tabs -->
+  <div style="display:flex; gap:8px; margin-bottom:10px;">
+    <button class="tab-btn active" onclick="switchTab('rec', this)">Recommendations</button>
+<button class="tab-btn" onclick="switchTab('disc', this)">Disruptions</button>
+<button class="tab-btn" onclick="switchTab('time', this)">Action timeline</button>
+  </div>
+
+  <!-- Recommendations -->
+  <div id="tab-rec">
+    <div id="r-actions-list"></div>
+  </div>
+
+  <!-- Disruptions -->
+  <div id="tab-disc" style="display:none">
+    <div class="disc-box">
+      <div class="disc-label">external disruptions</div>
+      <div id="r-disc-text"></div>
+    </div>
+  </div>
+
+  <!-- Timeline (placeholder) -->
+  <div id="tab-time" style="display:none">
+    <div class="disc-box">Timeline coming soon</div>
+  </div>
+
+</div>
 				</div>
 			</div>
 		</div>
@@ -387,4 +425,3 @@
 
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 	<script src="script.js"></script>
-	
