@@ -14,7 +14,7 @@ function getAuthHeaders() {
 }
 
 // ── CONFIG ──────────────────────────────────────────────────
-const BASE = 'http://127.0.0.1:8000';
+const BASE = "https://supplychainguard-pklq.onrender.com";
 
 // ── UTILS ───────────────────────────────────────────────────
 const $ = id => document.getElementById(id);
@@ -148,7 +148,10 @@ function buildPayload() {
 		Latitude: +$('s-lat').value,
 		Longitude: +$('s-lon').value,
 		Customer_Country: $('s-cust').value.trim(),
-		Order_Country: $('s-order').value.trim()
+		Order_Country: $('s-order').value.trim(),
+
+		//To be updated later as taking input from user
+		//Inventory_days: +$('s-days').value
 	};
 }
 
@@ -195,12 +198,46 @@ async function runPredict() {
 	$('r-badge').className = 'badge ' + lvl;
 	$('r-badge').innerHTML = '<span class="badge-dot"></span>' + (wd ? 'delay expected' : 'on time');
 
-	if (data.disruption_summary) {
-		$('r-disc-text').textContent = data.disruption_summary;
-		$('r-disc').style.display = 'block';
-	} else {
-		$('r-disc').style.display = 'none';
-	}
+
+	// ── SHOW ROUTE ──
+$('r-from').textContent = $('s-cust').value;
+$('r-to').textContent = $('s-order').value;
+$('r-route').style.display = 'block';
+
+if (data.disruption_summary) {
+  $('r-disc-text').textContent = data.disruption_summary;
+}
+
+	// ── SHOW RECOMMENDATIONS ──
+if (data.actions && data.actions.length > 0) {
+  const container = $('r-actions-list');
+  container.innerHTML = "";
+
+  data.actions.forEach((action, i) => {
+    const div = document.createElement("div");
+
+    // severity tags (simple logic)
+    let level = "low";
+    if (i === 0) level = "critical";
+    else if (i < 3) level = "high";
+    else if (i < 5) level = "medium";
+
+div.className = "rec-item";
+
+div.innerHTML = `
+  <div class="rec-row">
+    <span class="rec-tag ${level}">${level}</span>
+    <div class="rec-text">${action}</div>
+  </div>
+`;
+
+    container.appendChild(div);
+  });
+
+  $('r-tabs').style.display = 'block';
+} else {
+  $('r-tabs').style.display = 'none';
+}
 
 	$('p-result').style.display = 'block';
 	toast('Prediction complete');
@@ -248,7 +285,7 @@ async function runBatch() {
 		const r = await fetch(`${BASE}/predict-batch-file`, {
 			method: 'POST',
 			headers: {
-				"Authorization": `Bearer ${localStorage.getItem("token")}`
+				"Authorization": `Bearer ${token}`
 			}, 
 			body: fd
 		});
@@ -405,4 +442,22 @@ async function signup() {
   alert("Signup + Login successful ✅");
 
   goPage("dash");
+}
+
+function switchTab(name, btn) {
+  // hide all tabs
+  ['rec', 'disc', 'time'].forEach(t => {
+    document.getElementById('tab-' + t).style.display = 'none';
+  });
+
+  // show selected tab
+  document.getElementById('tab-' + name).style.display = 'block';
+
+  // remove active from all buttons
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    b.classList.remove('active');
+  });
+
+  // add active to clicked button
+  btn.classList.add('active');
 }
