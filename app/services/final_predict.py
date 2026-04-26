@@ -97,6 +97,8 @@ def deliver_final_verdict(data: Data, disruption_dict:dict, clf_model, reg_model
         )
         response["actions"]=actions
 
+        response_list.append(response)
+
     return response_list
 
 
