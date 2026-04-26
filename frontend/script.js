@@ -271,6 +271,10 @@ function loadCSV(ev) {
 }
 
 async function runBatch() {
+	if (!selectedFile) {
+  alert("Please upload a CSV file");
+  return;
+}
 	$('b-load').classList.add('show');
 	$('b-err').classList.remove('show');
 	$('b-results').style.display = 'none';
@@ -293,7 +297,7 @@ async function runBatch() {
 		data = await r.json();
 	} catch (e) {
 		$('b-load').classList.remove('show');
-		$('b-err').textContent = 'Error: ' + e.message + ' — check API at localhost:8000';
+		$('b-err').textContent = 'Error: ' + e.message + ' —  Backend connection failed.';
 		$('b-err').classList.add('show');
 		return;
 	}
