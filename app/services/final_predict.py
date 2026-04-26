@@ -99,6 +99,8 @@ def deliver_final_verdict(data: Data, disruption_dict:dict, clf_model, reg_model
         
         response_list.append(response)
 
+        response_list.append(response)
+
     return response_list
 
 
