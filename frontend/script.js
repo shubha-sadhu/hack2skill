@@ -173,7 +173,7 @@ async function runPredict() {
 		data = await r.json();
 	} catch (e) {
 		$('p-load').classList.remove('show');
-		$('p-err').textContent = 'Error: ' + e.message + ' — is the API running at localhost:8000?';
+		$('p-err').textContent = 'Error: ' + e.message + ' — Network error';
 		$('p-err').classList.add('show');
 		return;
 	}
