@@ -97,6 +97,10 @@ def deliver_final_verdict(data: Data, disruption_dict:dict, clf_model, reg_model
         )
         response["actions"]=actions
 
+        #csv file is not processed in index.js. So, sending some extra information such that displaying in UI becomes easy
+        response["Customer_Country"] = row_dict.get("Customer Country")
+        response["Order_Country"] = row_dict.get("Order Country")
+        response["Shipping_Mode"] = row_dict.get("Shipping Mode")
         response_list.append(response)
 
     return response_list
