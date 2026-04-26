@@ -306,20 +306,42 @@ async function runBatch() {
 	const rows = Array.isArray(data) ? data : (data.results || []);
 	$('b-tbody').innerHTML = '';
 	rows.forEach((row, i) => {
-		const sc = row.final_risk_score ?? 0;
-		const lvl = riskLevel(sc).toLowerCase();
-		const tr = document.createElement('tr');
-		tr.innerHTML = `
-      <td style="font-family:var(--mono);color:var(--muted)">${i + 1}</td>
-      <td style="font-family:var(--mono);font-size:10px">${row.Customer_Country || '—'} → ${row.Order_Country || '—'}</td>
-      <td>${row.Shipping_Mode || '—'}</td>
-      <td style="font-family:var(--mono)">${((row.delay_probability ?? 0) * 100).toFixed(1)}%</td>
-      <td style="font-family:var(--mono)">${row.will_delay ? (row.delay_days ?? 0).toFixed(1) + 'd' : '—'}</td>
-      <td style="font-family:var(--mono)">${sc.toFixed(2)}</td>
-      <td><span class="badge ${lvl}"><span class="badge-dot"></span>${lvl.toUpperCase()}</span></td>
-    `;
-		$('b-tbody').appendChild(tr);
-	});
+
+  const original = csvRows[i] || {};
+
+  const routeFrom =
+    original["Customer Country"] ||
+    original["Customer_Country"] ||
+    "—";
+
+  const routeTo =
+    original["Order Country"] ||
+    original["Order_Country"] ||
+    "—";
+
+  const mode =
+    original["Shipping Mode"] ||
+    original["Shipping_Mode"] ||
+    row.Shipping_Mode ||
+    "—";
+
+  const sc = row.final_risk_score ?? 0;
+  const lvl = riskLevel(sc).toLowerCase();
+
+  const tr = document.createElement('tr');
+
+  tr.innerHTML = `
+    <td style="font-family:var(--mono);color:var(--muted)">${i + 1}</td>
+    <td style="font-family:var(--mono);font-size:10px">${routeFrom} → ${routeTo}</td>
+    <td>${mode}</td>
+    <td style="font-family:var(--mono)">${((row.delay_probability ?? 0) * 100).toFixed(1)}%</td>
+    <td style="font-family:var(--mono)">${row.will_delay ? (row.delay_days ?? 0).toFixed(1) + 'd' : '—'}</td>
+    <td style="font-family:var(--mono)">${sc.toFixed(2)}</td>
+    <td><span class="badge ${lvl}"><span class="badge-dot"></span>${lvl.toUpperCase()}</span></td>
+  `;
+
+  $('b-tbody').appendChild(tr);
+});
 
 	$('b-results').style.display = 'block';
 	toast(`${rows.length} predictions done`);
