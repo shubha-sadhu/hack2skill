@@ -78,24 +78,24 @@ def deliver_final_verdict(data: Data, disruption_dict:dict, clf_model, reg_model
             0.2 * response["external_risk"]
         )
         response["final_risk_score"] = final_score
+        risk_types = disruption_dict.get(route, [{}])[0].get("risk_type") or []
         actions= generate_recommendations(
             predicted_delay=float(response["expected_delay"]),
-            risk_level=str((disruption_dict.get(route, [{}])[0].get("risk_type"))),
+            risk_level=str(risk_types),
             shipment_priority=str(row_dict.get("Shipping Mode")),
             transport_mode=str(row_dict.get("Transport_mode")),
             inventory_days_left=int(row_dict.get("Inventory_days") or 5),
             supplier_score=float(row_dict.get("Supplier_score") or 0.5),
-            port_congestion=("port_congestion" in disruption_dict.get(route, [{}])[0].get("risk_type")),
-            weather_risk=("weather_risk" in disruption_dict.get(route, [{}])[0].get("risk_type")),
-            strike_risk=("strike_risk" in disruption_dict.get(route, [{}])[0].get("risk_type")),
-            fuel_spike=("fuel_spike" in disruption_dict.get(route, [{}])[0].get("risk_type")),
-            customs_risk=("customs_risk" in disruption_dict.get(route, [{}])[0].get("risk_type")),
-            demand_spike=("demand_spike" in disruption_dict.get(route, [{}])[0].get("risk_type")),
-            route_risk=("route_risk" in disruption_dict.get(route, [{}])[0].get("risk_type"))
+
+            port_congestion=("port_congestion" in risk_types),
+            weather_risk=("weather_risk" in risk_types),
+            strike_risk=("strike_risk" in risk_types),
+            fuel_spike=("fuel_spike" in risk_types),
+            customs_risk=("customs_risk" in risk_types),
+            demand_spike=("demand_spike" in risk_types),
+            route_risk=("route_risk" in risk_types)
         )
         response["actions"]=actions
-
-        response_list.append(response)
 
     return response_list
 
